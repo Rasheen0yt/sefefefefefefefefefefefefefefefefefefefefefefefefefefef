@@ -13,25 +13,101 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Margin="10" Spacing="10">
-            <TextBlock Text="GreedyDownloader" FontSize="20" FontWeight="Bold"/>
-            <Grid ColumnDefinitions="*, Auto">
-                <TextBox Text="{Binding UrlInput}" PlaceholderText="Enter URL here..."/>
-                <Button Grid.Column="1" Command="{Binding AddDownloadCommand}" Content="Add Download" Margin="5,0,0,0"/>
-            </Grid>
-        </StackPanel>
-        
-        <ListBox ItemsSource="{Binding FilteredDownloads}" Margin="10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="{Binding FileName}" FontWeight="Bold"/>
-                        <ProgressBar Value="{Binding Progress}" Maximum="100"/>
-                        <TextBlock Text="{Binding StatusDisplay}" FontSize="12"/>
+    <Grid ColumnDefinitions="250, *">
+        <!-- Sidebar -->
+        <Border Background="{StaticResource LuminaCardBackground}" BorderBrush="{StaticResource LuminaBorder}" BorderThickness="0,0,1,0" Padding="16,32,16,16">
+            <DockPanel>
+                <!-- Title & Menu -->
+                <StackPanel DockPanel.Dock="Top" Spacing="8">
+                    <TextBlock Text="Downloads" FontSize="32" FontWeight="Bold" Margin="0,0,0,32" />
+
+                    <Button Classes="Secondary" Content="All" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="All" Background="{Binding IsAllSelected, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <Button Classes="Secondary" Content="Active" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Active" />
+                    <Button Classes="Secondary" Content="Paused" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Paused" />
+                    <Button Classes="Secondary" Content="Completed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Completed" />
+                    <Button Classes="Secondary" Content="Needs attention" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Error" />
+                </StackPanel>
+
+                <!-- Status & Connection -->
+                <StackPanel DockPanel.Dock="Bottom" Spacing="16">
+                    <Button Content="Clear completed" Command="{Binding ClearCompletedCommand}" Classes="Secondary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+
+                    <Border BorderBrush="{StaticResource LuminaBorder}" BorderThickness="1" CornerRadius="4" Padding="16">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock Text="Down" />
+                                <TextBlock Grid.Column="1" Text="{Binding GlobalDownloadSpeed}" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock Text="Up" />
+                                <TextBlock Grid.Column="1" Text="{Binding GlobalUploadSpeed}" />
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto, *" Margin="0,8,0,0">
+                                <Ellipse Width="8" Height="8" Fill="{Binding ConnectionColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" VerticalAlignment="Center" FontSize="12"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Column="1" RowDefinitions="Auto, *, Auto" Margin="32">
+            <!-- Add URL Area -->
+            <Border Background="{StaticResource LuminaCardBackground}" BorderBrush="{StaticResource LuminaBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <StackPanel Spacing="4" VerticalAlignment="Center" Width="200" Margin="0,0,16,0">
+                        <TextBlock Text="Save to" FontSize="12" Foreground="{StaticResource LuminaForegroundSecondary}" />
+                        <Button Content="{Binding DownloadDirectory}" Command="{Binding ChooseDirectoryCommand}" Classes="Secondary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" ToolTip.Tip="Click to change folder" Padding="8,4" FontSize="12"/>
                     </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="URL" FontSize="12" Foreground="{StaticResource LuminaForegroundSecondary}" />
+                        <TextBox Text="{Binding UrlInput}" PlaceholderText="Enter download links here..." BorderThickness="1" CornerRadius="4" Height="32" VerticalContentAlignment="Center" />
+                    </StackPanel>
+
+                    <Button Grid.Column="2" Content="Add" Command="{Binding AddDownloadCommand}" VerticalAlignment="Bottom" Height="32" Width="100" HorizontalContentAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Download List -->
+            <Border Grid.Row="1" Background="{StaticResource LuminaCardBackground}" BorderBrush="{StaticResource LuminaBorder}" BorderThickness="1" CornerRadius="8" Margin="0,32,0,0">
+                <Grid>
+                    <!-- Empty State -->
+                    <StackPanel IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+                        <TextBlock Text="Nothing queued" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock Text="Add a URL above to start your first download" Foreground="{StaticResource LuminaForegroundSecondary}" HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- List -->
+                    <ListBox ItemsSource="{Binding FilteredDownloads}" Background="Transparent" IsVisible="{Binding HasDownloads}" BorderThickness="0" Padding="16">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <StackPanel Spacing="4" Margin="0,0,16,0">
+                                        <TextBlock Text="{Binding FileName}" FontWeight="Bold"/>
+                                        <Grid ColumnDefinitions="*, Auto">
+                                            <ProgressBar Value="{Binding Progress}" Maximum="100" Height="4" Foreground="{StaticResource LuminaForeground}" Background="{StaticResource LuminaBorder}" VerticalAlignment="Center" Margin="0,0,16,0" />
+                                            <TextBlock Grid.Column="1" Text="{Binding StatusDisplay}" FontSize="12" Foreground="{StaticResource LuminaForegroundSecondary}" />
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <!-- Controls -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <Button Command="{Binding PauseCommand}" Classes="Secondary" Content="Pause" Padding="8,4" IsVisible="{Binding IsActive}" />
+                                        <Button Command="{Binding ResumeCommand}" Classes="Secondary" Content="Resume" Padding="8,4" IsVisible="{Binding IsPaused}" />
+                                        <Button Command="{Binding DeleteCommand}" Classes="Secondary" Content="✕" Padding="8,4" Foreground="#EF4444" BorderBrush="#33EF4444" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- Status Bar -->
+            <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" Foreground="{StaticResource LuminaForegroundSecondary}" FontSize="12" Margin="0,16,0,0" />
+        </Grid>
+    </Grid>
 </Window>
