@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GreedyDownloader.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="GreedyDownloader.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="GreedyDownloader">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Margin="10" Spacing="10">
+            <TextBlock Text="GreedyDownloader" FontSize="20" FontWeight="Bold"/>
+            <Grid ColumnDefinitions="*, Auto">
+                <TextBox Text="{Binding UrlInput}" PlaceholderText="Enter URL here..."/>
+                <Button Grid.Column="1" Command="{Binding AddDownloadCommand}" Content="Add Download" Margin="5,0,0,0"/>
+            </Grid>
+        </StackPanel>
+        
+        <ListBox ItemsSource="{Binding FilteredDownloads}" Margin="10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="{Binding FileName}" FontWeight="Bold"/>
+                        <ProgressBar Value="{Binding Progress}" Maximum="100"/>
+                        <TextBlock Text="{Binding StatusDisplay}" FontSize="12"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</Window>
