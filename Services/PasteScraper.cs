@@ -232,7 +232,18 @@ public class PasteScraper
     {
         try
         {
-            var html = await _httpClient.GetStringAsync(url);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+
+            var contentType = response.Content.Headers.ContentType?.MediaType;
+            if (contentType != null && !contentType.Contains("text") && !contentType.Contains("json"))
+            {
+                // Likely a binary file or direct download, don't attempt to parse as HTML/text
+                return new List<string>();
+            }
+
+            var html = await response.Content.ReadAsStringAsync();
             return ExtractUrls(html);
         }
         catch { return new List<string>(); }

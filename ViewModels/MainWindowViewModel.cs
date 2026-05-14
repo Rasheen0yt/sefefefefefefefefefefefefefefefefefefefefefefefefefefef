@@ -25,26 +25,6 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     [ObservableProperty]
     private string _urlInput = string.Empty;
 
-    [ObservableProperty]
-    private Avalonia.Styling.ThemeVariant _currentThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
-
-    [RelayCommand]
-    private void ToggleTheme()
-    {
-        CurrentThemeVariant = CurrentThemeVariant == Avalonia.Styling.ThemeVariant.Dark 
-            ? Avalonia.Styling.ThemeVariant.Light 
-            : Avalonia.Styling.ThemeVariant.Dark;
-        
-        if (Avalonia.Application.Current != null)
-        {
-            Avalonia.Application.Current.RequestedThemeVariant = CurrentThemeVariant;
-        }
-
-        System.Diagnostics.Debug.WriteLine($"Theme toggled to: {CurrentThemeVariant}");
-        OnPropertyChanged(nameof(ThemeIcon));
-    }
-
-    public string ThemeIcon => CurrentThemeVariant == Avalonia.Styling.ThemeVariant.Dark ? "🌙" : "☀️";
 
     [ObservableProperty]
     private string _globalDownloadSpeed = "0 B/s";
@@ -255,50 +235,64 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
             var matches = urlRegex.Matches(input);
 
-            // Single URL: try paste scraping / link extraction.
-            if (matches.Count == 1 && input.TrimEnd() == matches[0].Value)
+            int totalAdded = 0;
+
+            if (matches.Count == 0)
             {
+                // Not a valid URL, let engine validate it and report a useful error
+                await _engineService.AddUriAsync(input, DownloadDirectory);
+                totalAdded = 1;
+            }
+            else if (matches.Count == 1)
+            {
+                // Try paste scraping/link extraction for single URL
                 ShowStatus("Analyzing link...");
-                var extractedUrls = await _pasteScraper.ExtractUrlsAsync(input);
+                var extractedUrls = await _pasteScraper.ExtractUrlsAsync(matches[0].Value);
 
                 if (extractedUrls.Count > 0)
                 {
-                    int added = 0;
                     foreach (var url in extractedUrls)
                     {
                         await _engineService.AddUriAsync(url, DownloadDirectory);
-                        added++;
+                        totalAdded++;
                     }
-                    ShowStatus($"Found and queued {added} downloads");
-                    await PollEngineAsync();
-                    return;
                 }
-
-                // No links extracted - download the URL itself.
-                await _engineService.AddUriAsync(input, DownloadDirectory);
-                ShowStatus("Download added");
-                await PollEngineAsync();
-                return;
-            }
-
-            // Multiple URLs pasted as text.
-            int addedCount = 0;
-            if (matches.Count > 1)
-            {
-                foreach (Match match in matches)
+                else
                 {
-                    await _engineService.AddUriAsync(match.Value.TrimEnd('.', ',', ';'), DownloadDirectory);
-                    addedCount++;
+                    // No links extracted - download the URL itself
+                    await _engineService.AddUriAsync(matches[0].Value, DownloadDirectory);
+                    totalAdded = 1;
                 }
             }
             else
             {
-                // Not even a URL - let engine validate it and report a useful error.
-                await _engineService.AddUriAsync(input, DownloadDirectory);
-                addedCount = 1;
+                // Multiple URLs pasted as text, loop over each to see if we need to scrape them or just add them
+                // Note: For speed, we just add them directly if they are multiple, but let's check if they are pastebin links
+                ShowStatus("Processing multiple links...");
+                foreach (Match match in matches)
+                {
+                    var url = match.Value.TrimEnd('.', ',', ';');
+
+                    // Optional: we could call ExtractUrlsAsync on each, but it might take long.
+                    // To act like jDownloader, we should analyze each link if it might be a paste.
+                    var extractedUrls = await _pasteScraper.ExtractUrlsAsync(url);
+                    if (extractedUrls.Count > 0)
+                    {
+                        foreach (var extUrl in extractedUrls)
+                        {
+                            await _engineService.AddUriAsync(extUrl, DownloadDirectory);
+                            totalAdded++;
+                        }
+                    }
+                    else
+                    {
+                        await _engineService.AddUriAsync(url, DownloadDirectory);
+                        totalAdded++;
+                    }
+                }
             }
 
-            ShowStatus(addedCount == 1 ? "Download added" : $"{addedCount} downloads added");
+            ShowStatus(totalAdded == 1 ? "Download added" : $"{totalAdded} downloads added");
             await PollEngineAsync();
         }
         catch (Exception ex)

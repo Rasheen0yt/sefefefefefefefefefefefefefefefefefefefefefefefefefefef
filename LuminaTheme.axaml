@@ -1,0 +1,131 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Styles.Resources>
+        <!-- Colors -->
+        <Color x:Key="LuminaBackground">#000000</Color>
+        <Color x:Key="LuminaForeground">#FFFFFF</Color>
+        <Color x:Key="LuminaForegroundSecondary">#99FFFFFF</Color>
+        <Color x:Key="LuminaForegroundTertiary">#66FFFFFF</Color>
+        <Color x:Key="LuminaBorder">#1AFFFFFF</Color>
+        <Color x:Key="LuminaCardBackground">#050505</Color>
+
+        <!-- The "AI RGB" Pulse -->
+        <LinearGradientBrush x:Key="LuminaGlow" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Offset="0" Color="#FF3B82F6"/> <!-- Blue -->
+            <GradientStop Offset="0.33" Color="#FF8B5CF6"/> <!-- Purple -->
+            <GradientStop Offset="0.66" Color="#FFEF4444"/> <!-- Red -->
+            <GradientStop Offset="1" Color="#FFF59E0B"/> <!-- Gold -->
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="LuminaGlowRight" StartPoint="0%,50%" EndPoint="100%,50%">
+            <GradientStop Offset="0" Color="Transparent"/>
+            <GradientStop Offset="0.8" Color="#FF8B5CF6"/> <!-- Purple -->
+            <GradientStop Offset="1" Color="#FFF59E0B"/> <!-- Gold -->
+        </LinearGradientBrush>
+    </Styles.Resources>
+
+    <!-- Global App Styles -->
+    <Style Selector="Window">
+        <Setter Property="Background" Value="{StaticResource LuminaBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource LuminaForeground}" />
+        <Setter Property="FontFamily" Value="avares://GreedyDownloader/Assets/Fonts#Hanken Grotesk, sans-serif" />
+    </Style>
+
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource LuminaForeground}" />
+    </Style>
+
+    <!-- Inputs -->
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource LuminaForeground}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="{StaticResource LuminaBorder}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="0,8" />
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource LuminaGlow}" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Base Button -->
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{StaticResource LuminaForeground}" />
+        <Setter Property="Foreground" Value="{StaticResource LuminaBackground}" />
+        <Setter Property="CornerRadius" Value="4" /> <!-- 0.25rem -->
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button:pointerover">
+        <Setter Property="BorderBrush" Value="{StaticResource LuminaGlowRight}" />
+    </Style>
+
+    <Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource LuminaForeground}" />
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource LuminaForeground}" />
+    </Style>
+
+
+    <!-- Secondary Button -->
+    <Style Selector="Button.Secondary">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource LuminaForeground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LuminaBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Button.Secondary /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.Secondary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+
+    <!-- ListBox -->
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="ListBoxItem">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{StaticResource LuminaCardBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LuminaBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource LuminaCardBackground}" />
+    </Style>
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="#101010" />
+    </Style>
+
+</Styles>
