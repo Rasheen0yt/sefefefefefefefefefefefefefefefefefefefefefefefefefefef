@@ -1,0 +1,5 @@
+<<<<<<< SEARCH
+                    <Button Classes="Secondary" Content="All" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="All" Background="{Binding IsAllSelected, Converter={x:Static ObjectConverters.IsNotNull}}" />
+=======
+                    <Button Classes="Secondary" Content="All" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="All" />
+>>>>>>> REPLACE

@@ -21,7 +21,7 @@
                 <StackPanel DockPanel.Dock="Top" Spacing="8">
                     <TextBlock Text="Downloads" FontSize="32" FontWeight="Bold" Margin="0,0,0,32" />
 
-                    <Button Classes="Secondary" Content="All" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="All" Background="{Binding IsAllSelected, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <Button Classes="Secondary" Content="All" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="All" />
                     <Button Classes="Secondary" Content="Active" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Active" />
                     <Button Classes="Secondary" Content="Paused" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Paused" />
                     <Button Classes="Secondary" Content="Completed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Command="{Binding SelectCategoryCommand}" CommandParameter="Completed" />
