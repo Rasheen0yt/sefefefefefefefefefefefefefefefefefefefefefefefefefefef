@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -10,6 +12,7 @@ public class Aria2Service : IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly string _rpcUrl = "http://127.0.0.1:6800/jsonrpc";
+    private Process? _aria2Process;
     private bool _disposed;
     private int _requestId;
 
@@ -45,25 +48,74 @@ public class Aria2Service : IDisposable
         catch (Exception ex)
         {
             AppLogger.Error($"RPC Call Failed: {method}", ex);
-            IsRunning = false;
             throw;
         }
     }
 
     public async Task<bool> StartAsync()
     {
+        if (IsRunning) return true;
+
         try
         {
-            // Just ping the server to check if it's alive.
+            // 1. Try to see if it's already running
             await CallRpcAsync("aria2.getVersion");
             IsRunning = true;
             return true;
         }
         catch
         {
-            IsRunning = false;
-            return false;
+            // 2. Start it ourselves
+            return await LaunchEngineAsync();
         }
+    }
+
+    private async Task<bool> LaunchEngineAsync()
+    {
+        try
+        {
+            string enginePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Engine", "aria2c.exe");
+            
+            // Fallback for development/published paths
+            if (!File.Exists(enginePath))
+                enginePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aria2c.exe");
+
+            if (!File.Exists(enginePath))
+            {
+                AppLogger.Error($"Engine not found at: {enginePath}");
+                return false;
+            }
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = enginePath,
+                Arguments = "--enable-rpc --rpc-listen-all=false --rpc-listen-port=6800 --max-connection-per-server=16 --split=16 --min-split-size=1M --daemon=false",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+
+            _aria2Process = Process.Start(startInfo);
+            
+            // Wait for it to wake up
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    await Task.Delay(500);
+                    await CallRpcAsync("aria2.getVersion");
+                    IsRunning = true;
+                    return true;
+                }
+                catch { /* Ignore and retry */ }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Error("Failed to launch engine", ex);
+        }
+
+        return false;
     }
 
     public Task<string> AddUriAsync(string uri, string? downloadDir = null)
@@ -77,75 +129,42 @@ public class Aria2Service : IDisposable
         return CallRpcAsync("aria2.addUri", new[] { uri }, options);
     }
 
-    public Task<string> PauseAsync(string gid)
-    {
-        return CallRpcAsync("aria2.pause", gid);
-    }
+    public Task<string> PauseAsync(string gid) => CallRpcAsync("aria2.pause", gid);
+    public Task<string> UnpauseAsync(string gid) => CallRpcAsync("aria2.unpause", gid);
+    public Task<string> RemoveAsync(string gid) => CallRpcAsync("aria2.remove", gid);
+    public Task<string> ForceRemoveAsync(string gid) => CallRpcAsync("aria2.forceRemove", gid);
+    public Task<string> RemoveDownloadResultAsync(string gid) => CallRpcAsync("aria2.removeDownloadResult", gid);
+    public Task<string> GetGlobalStatAsync() => CallRpcAsync("aria2.getGlobalStat");
+    public Task<string> TellActiveAsync() => CallRpcAsync("aria2.tellActive");
+    public Task<string> TellWaitingAsync(int offset, int num) => CallRpcAsync("aria2.tellWaiting", offset, num);
+    public Task<string> TellStoppedAsync(int offset, int num) => CallRpcAsync("aria2.tellStopped", offset, num);
+    public Task<string> PurgeDownloadResultAsync() => CallRpcAsync("aria2.purgeDownloadResult");
 
-    public Task<string> UnpauseAsync(string gid)
+    public async Task GracefulShutdownAsync()
     {
-        return CallRpcAsync("aria2.unpause", gid);
-    }
-
-    public Task<string> RemoveAsync(string gid)
-    {
-        return CallRpcAsync("aria2.remove", gid);
-    }
-
-    public Task<string> ForceRemoveAsync(string gid)
-    {
-        return CallRpcAsync("aria2.forceRemove", gid);
-    }
-
-    public Task<string> RemoveDownloadResultAsync(string gid)
-    {
-        return CallRpcAsync("aria2.removeDownloadResult", gid);
-    }
-
-    public Task<string> GetGlobalStatAsync()
-    {
-        return CallRpcAsync("aria2.getGlobalStat");
-    }
-
-    public Task<string> TellActiveAsync()
-    {
-        return CallRpcAsync("aria2.tellActive");
-    }
-
-    public Task<string> TellWaitingAsync(int offset, int num)
-    {
-        return CallRpcAsync("aria2.tellWaiting", offset, num);
-    }
-
-    public Task<string> TellStoppedAsync(int offset, int num)
-    {
-        return CallRpcAsync("aria2.tellStopped", offset, num);
-    }
-
-    public Task<string> PurgeDownloadResultAsync()
-    {
-        return CallRpcAsync("aria2.purgeDownloadResult");
-    }
-
-    public Task GracefulShutdownAsync()
-    {
-        if (!IsRunning) return Task.CompletedTask;
-        try
+        if (!IsRunning) return;
+        try { await CallRpcAsync("aria2.shutdown"); } catch { }
+        
+        if (_aria2Process != null && !_aria2Process.HasExited)
         {
-            return CallRpcAsync("aria2.shutdown");
+            _aria2Process.Kill();
         }
-        catch
+        IsRunning = false;
+    }
+
+    public void Stop() 
+    {
+        if (_aria2Process != null && !_aria2Process.HasExited)
         {
-            return Task.CompletedTask; // Best effort
+            _aria2Process.Kill();
         }
     }
-
-    public void Stop() { }
 
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
+        Stop();
         _httpClient.Dispose();
     }
 }
