@@ -21,6 +21,15 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
+    <Window.Resources>
+        <LinearGradientBrush x:Key="LuminaGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#3B82F6" Offset="0.0"/>
+            <GradientStop Color="#8B5CF6" Offset="0.33"/>
+            <GradientStop Color="#EF4444" Offset="0.66"/>
+            <GradientStop Color="#F59E0B" Offset="1.0"/>
+        </LinearGradientBrush>
+    </Window.Resources>
+
     <Window.Styles>
         <!-- TextBoxes -->
         <Style Selector="TextBox.urlInput">
@@ -43,10 +52,17 @@
             <Setter Property="CornerRadius" Value="24"/>
             <Setter Property="Padding" Value="24,8"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource ActionHoverBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LuminaGradient}"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
