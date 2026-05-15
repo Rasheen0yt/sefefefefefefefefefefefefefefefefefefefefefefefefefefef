@@ -8,8 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="GreedyDownloader"
-        Background="{DynamicResource SystemRegionBrush}"
-        Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+        Background="{DynamicResource LuminaBackground}"
+        Foreground="{DynamicResource LuminaTextSecondary}"
         FontFamily="Inter"
         WindowStartupLocation="CenterScreen"
         Width="1050" Height="650"
@@ -23,25 +23,23 @@
 
     <Window.Styles>
         <Style Selector="TextBox">
-            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="CaretBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource LuminaBorder}"/>
+            <Setter Property="Foreground" Value="{DynamicResource LuminaTextSecondary}"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource LuminaText}"/>
         </Style>
         <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource LuminaBorderFocus}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
         </Style>
-        
         <Style Selector="Button.primary">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}"/>
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundAltHighBrush}"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="20,10"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="{DynamicResource LuminaPrimaryBtnBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource LuminaPrimaryBtnText}"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Transitions">
                 <Transitions>
@@ -50,16 +48,12 @@
             </Setter>
         </Style>
         <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight1}"/>
+            <Setter Property="Background" Value="{DynamicResource LuminaPrimaryBtnHover}"/>
             <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-        <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}"/>
         </Style>
         <Style Selector="Button.primary:pressed">
             <Setter Property="RenderTransform" Value="scale(0.97)"/>
         </Style>
-        
         <Style Selector="Button.iconBtn">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="CornerRadius" Value="6"/>
@@ -70,16 +64,14 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="Button.iconBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
+        <Style Selector="Button.iconBtn:pointerover /template/ ContentPresenter#PART_ContentPresenter">        
+            <Setter Property="Background" Value="{DynamicResource LuminaBorderFaint}"/>      
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
-
         <Style Selector="ListBox">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
-        
         <Style Selector="ListBoxItem">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Margin" Value="0,0,0,12"/>
@@ -90,11 +82,10 @@
                 </Transitions>
             </Setter>
         </Style>
-        
         <Style Selector="RadioButton.category">
             <Setter Property="Margin" Value="0,2"/>
             <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource LuminaTextSecondary}"/>
             <Setter Property="CornerRadius" Value="6"/>
             <Setter Property="Transitions">
                 <Transitions>
@@ -110,53 +101,51 @@
             </Setter>
         </Style>
         <Style Selector="RadioButton.category:pointerover">
-            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource LuminaBorderFaint}"/>      
+            <Setter Property="Foreground" Value="{DynamicResource LuminaText}"/>     
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style Selector="RadioButton.category:checked">
-            <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}"/>
+            <Setter Property="Background" Value="{DynamicResource LuminaBorderFaint}"/> 
+            <Setter Property="Foreground" Value="{DynamicResource LuminaText}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
     </Window.Styles>
 
     <Grid ColumnDefinitions="260, *">
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
-                BorderBrush="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
-                BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{DynamicResource LuminaSurface}" BorderBrush="{DynamicResource LuminaBorderFaint}" BorderThickness="0,0,1,0">
             <DockPanel Margin="24, 40, 24, 24">
                 <!-- Status (Bottom) -->
                 <StackPanel DockPanel.Dock="Bottom" Spacing="16">
-                    <Separator Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" Height="1"/>
-                    
+                    <Separator Background="{DynamicResource LuminaBorderFaint}" Height="1"/> 
+
                     <Grid ColumnDefinitions="Auto,*">
                         <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding ConnectionColor}" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                        <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" FontSize="14" FontWeight="Medium" Foreground="{DynamicResource LuminaTextSecondary}"/>
                     </Grid>
-                    
+
                     <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *" Margin="22,0,0,0">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="↓" FontSize="14" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,8,4"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GlobalDownloadSpeed}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" Margin="0,0,0,4"/>
-                        
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="↑" FontSize="14" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Margin="0,0,8,0"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GlobalUploadSpeed}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="↓" FontSize="14" Foreground="{DynamicResource LuminaTextTertiary}" Margin="0,0,8,4"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GlobalDownloadSpeed}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource LuminaTextSecondary}" Margin="0,0,0,4"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="↑" FontSize="14" Foreground="{DynamicResource LuminaTextTertiary}" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GlobalUploadSpeed}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource LuminaTextSecondary}"/>
                     </Grid>
                 </StackPanel>
 
                 <StackPanel Spacing="32">
                     <!-- Brand -->
                     <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                        <Border Background="{DynamicResource SystemAccentColor}" Width="32" Height="32" CornerRadius="8">
-                            <TextBlock Text="↓" Foreground="{DynamicResource SystemControlForegroundAltHighBrush}" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Background="{DynamicResource LuminaText}" Width="32" Height="32" CornerRadius="8">
+                            <TextBlock Text="↓" Foreground="{DynamicResource LuminaSurface}" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <TextBlock Text="Greedy" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" LetterSpacing="-0.5" VerticalAlignment="Center"/>
+                        <TextBlock Text="Greedy" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource LuminaText}" LetterSpacing="-0.5" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <!-- Categories -->
                     <StackPanel Spacing="4">
-                        <TextBlock Text="LIBRARY" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseLowBrush}" FontWeight="Bold" LetterSpacing="1" Margin="12,0,0,8"/>
+                        <TextBlock Text="LIBRARY" FontSize="12" Foreground="{DynamicResource LuminaTextTertiary}" FontWeight="Bold" LetterSpacing="1" Margin="12,0,0,8"/>
                         
                         <RadioButton Classes="category" Content="All Downloads" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="All" IsChecked="{Binding IsAllSelected}"/>
                         <RadioButton Classes="category" Content="Active" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Active" IsChecked="{Binding IsActiveSelected}"/>
@@ -165,7 +154,7 @@
                         <RadioButton Classes="category" Content="Errors" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Error" IsChecked="{Binding IsErrorSelected}"/>
                     </StackPanel>
                     
-                    <Button Content="Clear Completed" Command="{Binding ClearCompletedCommand}" Classes="iconBtn" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" HorizontalAlignment="Left" Padding="12,8"/>
+                    <Button Content="Clear Completed" Command="{Binding ClearCompletedCommand}" Classes="iconBtn" Foreground="{DynamicResource LuminaTextSecondary}" HorizontalAlignment="Left" Padding="12,8"/>
                 </StackPanel>
             </DockPanel>
         </Border>
@@ -175,45 +164,38 @@
             <!-- Header/Input -->
             <StackPanel DockPanel.Dock="Top" Spacing="24" Margin="0,0,0,32">
                 <Grid ColumnDefinitions="*, Auto">
-                    <TextBlock Grid.Column="0" Text="Downloads" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" LetterSpacing="-0.5"/>
-                    <Button Grid.Column="1" Content="{Binding ThemeIcon}" Command="{Binding ToggleThemeCommand}" Classes="iconBtn" FontSize="20"/>
+                    <TextBlock Grid.Column="0" Text="Downloads" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource LuminaText}" LetterSpacing="-0.5"/>
+                    <Button Grid.Column="1" Content="{Binding ThemeIcon}" Command="{Binding ToggleThemeCommand}" Classes="iconBtn" Foreground="{DynamicResource LuminaText}" FontSize="20"/>
                 </Grid>
                 
                 <Grid ColumnDefinitions="*, Auto">
                     <TextBox Grid.Column="0" Text="{Binding UrlInput}" Watermark="Paste URL or multiple links here..." FontSize="15" VerticalAlignment="Stretch"/>
                     <Button Grid.Column="1" Classes="primary" Content="Add Download" Command="{Binding AddDownloadCommand}" Margin="16,0,0,0" VerticalAlignment="Stretch"/>
                 </Grid>
-                
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="13" MinHeight="20" Margin="4, -12, 0, 0"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource LuminaTextSecondary}" FontSize="13" MinHeight="20" Margin="4, -12, 0, 0"/>
             </StackPanel>
 
             <!-- Download List -->
-            <ListBox ItemsSource="{Binding FilteredDownloads}">
+            <ListBox ItemsSource="{Binding FilteredDownloads}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
-                                BorderBrush="{DynamicResource SystemControlBackgroundBaseLowBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="12" 
-                                Padding="24"
-                                BoxShadow="0 4 12 0 #0A000000">
+                        <Border Background="{DynamicResource LuminaSurface}" BorderBrush="{DynamicResource LuminaBorderFaint}" BorderThickness="1" CornerRadius="12" Padding="24" BoxShadow="0 4 12 0 #0A000000">
                             <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
-                                <!-- Top Row: Filename and Actions -->
-                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource LuminaText}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
                                 
+                                <!-- Actions -->
                                 <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="16,0,0,0">
-                                    <Button Content="▶" Command="{Binding ResumeCommand}" IsVisible="{Binding IsPaused}" Classes="iconBtn" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
-                                    <Button Content="⏸" Command="{Binding PauseCommand}" IsVisible="{Binding IsActive}" Classes="iconBtn" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
-                                    <Button Content="✕" Command="{Binding DeleteCommand}" Classes="iconBtn" Foreground="#E57373"/>
+                                    <Button Content="▶" Command="{Binding ResumeCommand}" IsVisible="{Binding IsPaused}" Classes="iconBtn" Foreground="{DynamicResource LuminaText}"/>
+                                    <Button Content="⏸" Command="{Binding PauseCommand}" IsVisible="{Binding IsActive}" Classes="iconBtn" Foreground="{DynamicResource LuminaText}"/>
+                                    <Button Content="✕" Command="{Binding DeleteCommand}" Classes="iconBtn" Foreground="{DynamicResource LuminaError}"/>
                                 </StackPanel>
 
-                                <!-- Bottom Row: Progress and Info -->
+                                <!-- Progress and Status -->
                                 <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,16,0,0" Spacing="12">
-                                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="6" CornerRadius="3" Foreground="{DynamicResource SystemAccentColor}" Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
-                                    
+                                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="6" CornerRadius="3" Foreground="{DynamicResource LuminaProgressBarFill}" Background="{DynamicResource LuminaProgressBarBg}"/>
                                     <Grid ColumnDefinitions="Auto, *, Auto">
-                                        <TextBlock Grid.Column="0" Text="{Binding StatusDisplay}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding DownloadSpeed}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" TextAlignment="Right"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding StatusDisplay}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource LuminaTextTertiary}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding DownloadSpeed}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource LuminaTextTertiary}" TextAlignment="Right"/>
                                     </Grid>
                                 </StackPanel>
                             </Grid>

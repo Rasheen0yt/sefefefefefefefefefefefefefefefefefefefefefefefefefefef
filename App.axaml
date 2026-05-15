@@ -3,7 +3,45 @@
              x:Class="GreedyDownloader.App"
              xmlns:local="using:GreedyDownloader"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="LuminaBackground">#131313</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaSurface">#000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaText">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaTextSecondary">#cfc4c5</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaTextTertiary">#988e90</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorder">#33FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorderFaint">#1AFFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorderFocus">#c6c6c6</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaError">#ffb4ab</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnBg">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnText">#000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnHover">#e2e2e2</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaProgressBarBg">#1b1b1b</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaProgressBarFill">#c6c6c6</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="LuminaBackground">#f5f5f5</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaSurface">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaText">#000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaTextSecondary">#474747</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaTextTertiary">#757575</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorder">#33000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorderFaint">#1A000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaBorderFocus">#303030</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaError">#ba1a1a</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnBg">#000000</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnText">#FFFFFF</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaPrimaryBtnHover">#303030</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaProgressBarBg">#e2e2e2</SolidColorBrush>
+                    <SolidColorBrush x:Key="LuminaProgressBarFill">#303030</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 
     <Application.DataTemplates>
         <local:ViewLocator/>
