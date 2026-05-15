@@ -22,16 +22,69 @@
     </Design.DataContext>
 
     <Window.Resources>
-        <LinearGradientBrush x:Key="MetallicRidgeBrush" StartPoint="0%,0%" EndPoint="100%,100%">
-            <GradientStop Color="#3B82F6" Offset="0.0"/>
-            <GradientStop Color="#8B5CF6" Offset="0.25"/>
-            <GradientStop Color="#EF4444" Offset="0.5"/>
-            <GradientStop Color="#F59E0B" Offset="0.75"/>
-            <GradientStop Color="#3B82F6" Offset="1.0"/>
+        <!-- Refined Chrome Metallic Brush with Specular Highlights and Rainbow Fringe -->
+        <LinearGradientBrush x:Key="ChromeMetallicBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#FFFFFF" Offset="0.0"/>
+            <GradientStop Color="#A0FFFFFF" Offset="0.15"/>
+            <GradientStop Color="#3B82F6" Offset="0.3"/>
+            <GradientStop Color="#FFFFFF" Offset="0.5"/>
+            <GradientStop Color="#EF4444" Offset="0.7"/>
+            <GradientStop Color="#A0FFFFFF" Offset="0.85"/>
+            <GradientStop Color="#FFFFFF" Offset="1.0"/>
         </LinearGradientBrush>
     </Window.Resources>
 
     <Window.Styles>
+        <!-- Reusable Metallic Animation for ALL Buttons -->
+        <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter, 
+                        RadioButton.category:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderThickness" Value="1.2"/>
+            <Style.Animations>
+                <Animation Duration="0:0:2.5" IterationCount="INFINITE">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="BorderBrush">
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#FFFFFF" Offset="0.0"/><GradientStop Color="#3B82F6" Offset="0.3"/><GradientStop Color="#FFFFFF" Offset="0.5"/><GradientStop Color="#EF4444" Offset="0.7"/><GradientStop Color="#FFFFFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="BoxShadow" Value="0 0 10 1 #33FFFFFF"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="25%">
+                        <Setter Property="BorderBrush">
+                            <LinearGradientBrush StartPoint="100%,0%" EndPoint="0%,100%">
+                                <GradientStop Color="#FFFFFF" Offset="0.0"/><GradientStop Color="#8B5CF6" Offset="0.3"/><GradientStop Color="#FFFFFF" Offset="0.5"/><GradientStop Color="#F59E0B" Offset="0.7"/><GradientStop Color="#FFFFFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="BoxShadow" Value="0 0 15 2 #55FFFFFF"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="50%">
+                        <Setter Property="BorderBrush">
+                            <LinearGradientBrush StartPoint="100%,100%" EndPoint="0%,0%">
+                                <GradientStop Color="#FFFFFF" Offset="0.0"/><GradientStop Color="#EF4444" Offset="0.3"/><GradientStop Color="#FFFFFF" Offset="0.5"/><GradientStop Color="#3B82F6" Offset="0.7"/><GradientStop Color="#FFFFFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="BoxShadow" Value="0 0 10 1 #33FFFFFF"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="75%">
+                        <Setter Property="BorderBrush">
+                            <LinearGradientBrush StartPoint="0%,100%" EndPoint="100%,0%">
+                                <GradientStop Color="#FFFFFF" Offset="0.0"/><GradientStop Color="#F59E0B" Offset="0.3"/><GradientStop Color="#FFFFFF" Offset="0.5"/><GradientStop Color="#8B5CF6" Offset="0.7"/><GradientStop Color="#FFFFFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="BoxShadow" Value="0 0 15 2 #55FFFFFF"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="BorderBrush">
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#FFFFFF" Offset="0.0"/><GradientStop Color="#3B82F6" Offset="0.3"/><GradientStop Color="#FFFFFF" Offset="0.5"/><GradientStop Color="#EF4444" Offset="0.7"/><GradientStop Color="#FFFFFF" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Setter>
+                        <Setter Property="BoxShadow" Value="0 0 10 1 #33FFFFFF"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
         <!-- TextBoxes -->
         <Style Selector="TextBox.urlInput">
             <Setter Property="Background" Value="{DynamicResource InputBackground}"/>
@@ -53,7 +106,7 @@
             <Setter Property="CornerRadius" Value="24"/>
             <Setter Property="Padding" Value="24,8"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="ClipToBounds" Value="False"/>
             <Setter Property="Transitions">
@@ -62,76 +115,9 @@
                 </Transitions>
             </Setter>
         </Style>
-        
         <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource ActionBackground}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource MetallicRidgeBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource ActionHoverBackground}"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Style.Animations>
-                <!-- Continuous Liquid Metal Ridge Animation -->
-                <Animation Duration="0:0:4" IterationCount="INFINITE">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="BorderBrush">
-                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                <GradientStop Color="#3B82F6" Offset="0.0"/>
-                                <GradientStop Color="#8B5CF6" Offset="0.25"/>
-                                <GradientStop Color="#EF4444" Offset="0.5"/>
-                                <GradientStop Color="#F59E0B" Offset="0.75"/>
-                                <GradientStop Color="#3B82F6" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Setter>
-                        <Setter Property="BoxShadow" Value="0 0 15 2 #443B82F6"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="25%">
-                        <Setter Property="BorderBrush">
-                            <LinearGradientBrush StartPoint="100%,0%" EndPoint="0%,100%">
-                                <GradientStop Color="#F59E0B" Offset="0.0"/>
-                                <GradientStop Color="#3B82F6" Offset="0.25"/>
-                                <GradientStop Color="#8B5CF6" Offset="0.5"/>
-                                <GradientStop Color="#EF4444" Offset="0.75"/>
-                                <GradientStop Color="#F59E0B" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Setter>
-                        <Setter Property="BoxShadow" Value="0 0 25 4 #668B5CF6"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="50%">
-                        <Setter Property="BorderBrush">
-                            <LinearGradientBrush StartPoint="100%,100%" EndPoint="0%,0%">
-                                <GradientStop Color="#EF4444" Offset="0.0"/>
-                                <GradientStop Color="#F59E0B" Offset="0.25"/>
-                                <GradientStop Color="#3B82F6" Offset="0.5"/>
-                                <GradientStop Color="#8B5CF6" Offset="0.75"/>
-                                <GradientStop Color="#EF4444" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Setter>
-                        <Setter Property="BoxShadow" Value="0 0 15 2 #44EF4444"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="75%">
-                        <Setter Property="BorderBrush">
-                            <LinearGradientBrush StartPoint="0%,100%" EndPoint="100%,0%">
-                                <GradientStop Color="#8B5CF6" Offset="0.0"/>
-                                <GradientStop Color="#EF4444" Offset="0.25"/>
-                                <GradientStop Color="#F59E0B" Offset="0.5"/>
-                                <GradientStop Color="#3B82F6" Offset="0.75"/>
-                                <GradientStop Color="#8B5CF6" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Setter>
-                        <Setter Property="BoxShadow" Value="0 0 25 4 #66F59E0B"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="BorderBrush">
-                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                <GradientStop Color="#3B82F6" Offset="0.0"/>
-                                <GradientStop Color="#8B5CF6" Offset="0.25"/>
-                                <GradientStop Color="#EF4444" Offset="0.5"/>
-                                <GradientStop Color="#F59E0B" Offset="0.75"/>
-                                <GradientStop Color="#3B82F6" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Setter>
-                        <Setter Property="BoxShadow" Value="0 0 15 2 #443B82F6"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
         </Style>
         <Style Selector="Button.primary:pressed">
             <Setter Property="RenderTransform" Value="scale(0.96)"/>
@@ -152,13 +138,14 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
 
-        <!-- Icon Buttons (Theme toggle, download actions) -->
+        <!-- Icon Buttons -->
         <Style Selector="Button.icon">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="CornerRadius" Value="6"/>
             <Setter Property="Padding" Value="8"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
         <Style Selector="Button.icon:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource ItemHoverBackground}"/>
@@ -172,9 +159,14 @@
             <Setter Property="Padding" Value="16,10"/>
             <Setter Property="Margin" Value="0,2"/>
             <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}"/>
                     </Border>
                 </ControlTemplate>
