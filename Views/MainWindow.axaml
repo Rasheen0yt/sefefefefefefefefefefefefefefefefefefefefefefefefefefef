@@ -53,7 +53,9 @@
             <Setter Property="Padding" Value="24,8"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderBrush">
+                <SolidColorBrush Color="Transparent" />
+            </Setter>
         </Style>
         <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="{DynamicResource ActionHoverBackground}"/>
@@ -61,19 +63,19 @@
             <Style.Animations>
                 <Animation Duration="0:0:3" IterationCount="INFINITE" PlaybackDirection="Alternate">
                     <KeyFrame Cue="0%">
-                        <Setter Property="BorderBrush" Value="#3B82F6"/>
+                        <Setter Property="BorderBrush.Color" Value="#3B82F6"/>
                         <Setter Property="BoxShadow" Value="0 0 10 2 #663B82F6"/>
                     </KeyFrame>
                     <KeyFrame Cue="33%">
-                        <Setter Property="BorderBrush" Value="#8B5CF6"/>
+                        <Setter Property="BorderBrush.Color" Value="#8B5CF6"/>
                         <Setter Property="BoxShadow" Value="0 0 10 2 #668B5CF6"/>
                     </KeyFrame>
                     <KeyFrame Cue="66%">
-                        <Setter Property="BorderBrush" Value="#EF4444"/>
+                        <Setter Property="BorderBrush.Color" Value="#EF4444"/>
                         <Setter Property="BoxShadow" Value="0 0 10 2 #66EF4444"/>
                     </KeyFrame>
                     <KeyFrame Cue="100%">
-                        <Setter Property="BorderBrush" Value="#F59E0B"/>
+                        <Setter Property="BorderBrush.Color" Value="#F59E0B"/>
                         <Setter Property="BoxShadow" Value="0 0 10 2 #66F59E0B"/>
                     </KeyFrame>
                 </Animation>
