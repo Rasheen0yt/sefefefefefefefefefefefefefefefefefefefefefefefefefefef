@@ -31,4 +31,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Playwright" Version="1.40.0" />
   </ItemGroup>
+
+  <Target Name="CopyExeToRoot" AfterTargets="Publish">
+    <Copy SourceFiles="$(PublishDir)$(AssemblyName).exe" DestinationFolder="$(MSBuildProjectDirectory)" />
+  </Target>
 </Project>
