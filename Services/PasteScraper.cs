@@ -67,9 +67,6 @@ public class PasteScraper
     {
         try
         {
-            // Ensure Playwright browsers are installed
-            Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
-
             using var playwright = await Microsoft.Playwright.Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new Microsoft.Playwright.BrowserTypeLaunchOptions
             {

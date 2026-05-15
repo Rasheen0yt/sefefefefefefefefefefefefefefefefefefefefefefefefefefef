@@ -448,28 +448,46 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     {
         var filtered = SelectedCategory switch
         {
-            DownloadCategory.Active => AllDownloads.Where(d => d.IsActive || d.IsWaiting),
-            DownloadCategory.Paused => AllDownloads.Where(d => d.IsPaused),
-            DownloadCategory.Completed => AllDownloads.Where(d => d.IsComplete),
-            DownloadCategory.Error => AllDownloads.Where(d => d.IsError),
-            _ => AllDownloads.AsEnumerable()
+            DownloadCategory.Active => AllDownloads.Where(d => d.IsActive || d.IsWaiting).ToList(),
+            DownloadCategory.Paused => AllDownloads.Where(d => d.IsPaused).ToList(),
+            DownloadCategory.Completed => AllDownloads.Where(d => d.IsComplete).ToList(),
+            DownloadCategory.Error => AllDownloads.Where(d => d.IsError).ToList(),
+            _ => AllDownloads.ToList()
         };
 
-        FilteredDownloads.Clear();
-        foreach (var item in filtered)
-            FilteredDownloads.Add(item);
+        var toRemove = FilteredDownloads.Where(d => !filtered.Contains(d)).ToList();
+        foreach (var item in toRemove)
+            FilteredDownloads.Remove(item);
+
+        for (int i = 0; i < filtered.Count; i++)
+        {
+            var item = filtered[i];
+            var currentIndex = FilteredDownloads.IndexOf(item);
+            
+            if (currentIndex == -1)
+            {
+                FilteredDownloads.Insert(Math.Min(i, FilteredDownloads.Count), item);
+            }
+            else if (currentIndex != i)
+            {
+                FilteredDownloads.Move(currentIndex, i);
+            }
+        }
     }
 
-    private void ShowStatus(string message)
+    private int _statusMessageId;
+
+    private async void ShowStatus(string message)
     {
         StatusMessage = message;
-        var clearTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
-        clearTimer.Tick += (_, _) =>
+        var currentId = ++_statusMessageId;
+        
+        await Task.Delay(5000);
+        
+        if (_statusMessageId == currentId && StatusMessage == message)
         {
-            if (StatusMessage == message) StatusMessage = "";
-            clearTimer.Stop();
-        };
-        clearTimer.Start();
+            StatusMessage = "";
+        }
     }
 
     public async void Dispose()

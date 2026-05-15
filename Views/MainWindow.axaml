@@ -3,35 +3,135 @@
         xmlns:vm="using:GreedyDownloader.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
         x:Class="GreedyDownloader.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GreedyDownloader">
+        Title="GreedyDownloader"
+        Background="#131313"
+        Foreground="#e2e2e2"
+        FontFamily="Inter">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Margin="10" Spacing="10">
-            <TextBlock Text="GreedyDownloader" FontSize="20" FontWeight="Bold"/>
-            <Grid ColumnDefinitions="*, Auto">
-                <TextBox Text="{Binding UrlInput}" PlaceholderText="Enter URL here..."/>
-                <Button Grid.Column="1" Command="{Binding AddDownloadCommand}" Content="Add Download" Margin="5,0,0,0"/>
-            </Grid>
-        </StackPanel>
-        
-        <ListBox ItemsSource="{Binding FilteredDownloads}" Margin="10">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="{Binding FileName}" FontWeight="Bold"/>
-                        <ProgressBar Value="{Binding Progress}" Maximum="100"/>
-                        <TextBlock Text="{Binding StatusDisplay}" FontSize="12"/>
+    <Window.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+            <Setter Property="Foreground" Value="#e2e2e2"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="CaretBrush" Value="#FFFFFF"/>
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#c6c6c6"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#e2e2e2"/>
+        </Style>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style Selector="RadioButton.category">
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="Foreground" Value="#cfc4c5"/>
+        </Style>
+        <Style Selector="RadioButton.category:checked">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="250, *">
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#000000" BorderBrush="#1AFFFFFF" BorderThickness="0,0,1,0" Padding="24">
+            <DockPanel>
+                <!-- Status (Bottom) -->
+                <StackPanel DockPanel.Dock="Bottom" Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Ellipse Grid.Column="0" Width="8" Height="8" Fill="{Binding ConnectionColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" FontSize="14" Foreground="#cfc4c5"/>
+                    </Grid>
+                    <TextBlock Text="{Binding GlobalDownloadSpeed, StringFormat='↓ {0}'}" FontSize="14" Foreground="#cfc4c5"/>
+                    <TextBlock Text="{Binding GlobalUploadSpeed, StringFormat='↑ {0}'}" FontSize="14" Foreground="#cfc4c5"/>
+                </StackPanel>
+
+                <StackPanel Spacing="32">
+                    <!-- Brand -->
+                    <TextBlock Text="GreedyDownloader" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" LetterSpacing="-0.02"/>
+
+                    <!-- Categories -->
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="LIBRARY" FontSize="12" Foreground="#4c4546" FontWeight="Bold" LetterSpacing="0.1" Margin="0,0,0,8"/>
+                        
+                        <RadioButton Classes="category" Content="All Downloads" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="All" IsChecked="{Binding IsAllSelected}"/>
+                        <RadioButton Classes="category" Content="Active" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Active" IsChecked="{Binding IsActiveSelected}"/>
+                        <RadioButton Classes="category" Content="Paused" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Paused" IsChecked="{Binding IsPausedSelected}"/>
+                        <RadioButton Classes="category" Content="Completed" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Completed" IsChecked="{Binding IsCompletedSelected}"/>
+                        <RadioButton Classes="category" Content="Errors" GroupName="Cat" Command="{Binding SelectCategoryCommand}" CommandParameter="Error" IsChecked="{Binding IsErrorSelected}"/>
                     </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+                    
+                    <Button Content="Clear Completed" Command="{Binding ClearCompletedCommand}" Background="Transparent" Foreground="#cfc4c5" HorizontalAlignment="Left" Padding="0"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <DockPanel Grid.Column="1" Margin="40">
+            <!-- Header/Input -->
+            <StackPanel DockPanel.Dock="Top" Spacing="24" Margin="0,0,0,24">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Grid.Column="0" Text="Downloads" FontSize="40" FontWeight="Bold" Foreground="#FFFFFF" LetterSpacing="-0.02"/>
+                    <Button Grid.Column="1" Content="{Binding ThemeIcon}" Command="{Binding ToggleThemeCommand}" Background="Transparent" FontSize="24" Padding="0"/>
+                </Grid>
+                
+                <Grid ColumnDefinitions="*, Auto" Margin="0,8,0,0">
+                    <TextBox Grid.Column="0" Text="{Binding UrlInput}" Watermark="Paste URL or multiple links here..." FontSize="16" Padding="0,8,0,8" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Classes="primary" Content="Add Download" Command="{Binding AddDownloadCommand}" Margin="16,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="#cfc4c5" FontSize="14" MinHeight="20"/>
+            </StackPanel>
+
+            <!-- Download List -->
+            <ListBox ItemsSource="{Binding FilteredDownloads}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#000000" BorderBrush="#1AFFFFFF" BorderThickness="1" CornerRadius="4" Padding="20">
+                            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis"/>
+                                
+                                <!-- Progress and Status -->
+                                <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,12,0,0" Spacing="8">
+                                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="4" Foreground="#c6c6c6" Background="#1b1b1b"/>
+                                    <Grid ColumnDefinitions="Auto, *, Auto">
+                                        <TextBlock Grid.Column="0" Text="{Binding StatusDisplay}" FontSize="14" Foreground="#988e90"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding DownloadSpeed}" FontSize="14" Foreground="#988e90" TextAlignment="Right"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <!-- Actions -->
+                                <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="16,0,0,0">
+                                    <Button Content="▶" Command="{Binding ResumeCommand}" IsVisible="{Binding IsPaused}" Background="Transparent" Foreground="#FFFFFF"/>
+                                    <Button Content="⏸" Command="{Binding PauseCommand}" IsVisible="{Binding IsActive}" Background="Transparent" Foreground="#FFFFFF"/>
+                                    <Button Content="✕" Command="{Binding DeleteCommand}" Background="Transparent" Foreground="#ffb4ab"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Grid>
 </Window>
